@@ -47,6 +47,7 @@ export default function App() {
       <div style={{ position: 'fixed', right: 16, bottom: 16, background: '#eee', padding: 8 }}>
         <div>State: {state.value.toString()}</div>
         <div>Authenticated: {String(state.context.authenticated)}</div>
+        {/* volta a exibir false quando pára a aplicação e roda novamente */}
       </div>
     </div>
   );

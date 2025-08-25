@@ -2,37 +2,40 @@ import { createMachine, assign } from 'xstate';
 
 export const navMachine = createMachine({
   id: 'navigation',
-  initial: 'menu',
+  initial: 'menu', // começa exibindo a tela do menu
   context: {
     authenticated: false // controle simples de autenticação
   },
   states: {
-    menu: {
+    menu: { // está na tela 'Menu' por causa do botão 'ir para opções'
       on: {
-        OPEN_OPTIONS: [
-          { target: 'options', guard: 'isAuthenticated' },
-          { target: 'login' } // se a guard falhar, vai para tela de login
+        OPEN_OPTIONS: [ // uma lista porque nesse há duas possibilidades: está autenticado ou não
+          { target: 'options', guard: 'isAuthenticated' }, // exibe as opções apenas se isAuthenticated === true
+          { target: 'login' } // se guard retornar false, exibe tela de login
         ]
       }
     },
     options: {
-      on: { BACK_TO_MENU: 'menu' }
+      on: { BACK_TO_MENU: 'menu' } // única opção na tela 'Opções'
     },
-    login: {
+    login: { // só é exibido se authenticated: false 
       on: {
-        LOGIN: {
-          target: 'options',
-          actions: 'setAuthenticated'
+        LOGIN: { // evento chamado pelo send
+          target: 'options', // se authenticated: true, exibe a tela de opções
+          actions: 'setAuthenticated' // modifica o context
         },
-        CANCEL: 'menu'
+        CANCEL: 'menu' // evento chamado pelo send
       }
     }
   }
 }, {
   guards: {
-    isAuthenticated: (context) => context.authenticated === true
+    isAuthenticated: (meta) => { // verifica  se context.authenticated é true 
+      const { context, event } = meta;
+      return !!context.authenticated;
+    }
   },
   actions: {
-    setAuthenticated: assign({ authenticated: () => true })
+    setAuthenticated: assign({ authenticated: () => true }) // decisão
   }
 });
