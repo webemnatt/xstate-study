@@ -2,9 +2,9 @@ import { createMachine } from 'xstate';
 
 export const toggleMachine = createMachine({
   id: 'toggle',
-  initial: 'off',
+  initial: 'turn-off',
   states: {
-    off: { on: { TOGGLE: 'on' } },
-    on: { on: { TOGGLE: 'off' } },
+    'turn-off': { on: { TOGGLE: 'turn-on' } },
+    'turn-on': { on: { TOGGLE: 'turn-off' } },
   },
 });
